@@ -62,7 +62,7 @@ class Formule {
     }
 
     // returns a boolean if this is the negation of the parameter
-    isNegation(formule) {
+    isNegationOf(symbole) {
 
     }
 

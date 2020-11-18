@@ -22,16 +22,20 @@ class Node {
 
     // Returns a boolean if the node get a contradiction
     isClosed() {
-        let isClosed = false; 
-        for (let i = 0; i < this.listeFormules.length; i++) {
-            for (let j = i + 1; j < this.listeFormules.length; j++) {
-                if (this.listeFormules[i].isNegation(this.listeFormules[j])) {
-                    isClosed = true;
-                    break;
+        let symbolesTab = new Array();
+        this.listeFormules.forEach(formule => {
+            if (formule.isSymboleLogique()) {
+                symbolesTab.push(formule);
+            }
+        });
+        for (let i = 0; i < symbolesTab.length; i++) {
+            for (let j = i + 1; j < symbolesTab.length; j++) {
+                if (symbolesTab[i].isNegationOf(symbolesTab[j])) {
+                    return true;
                 }
             }
         }
-        return isClosed;
+        return false;
     }
 
     isClosedByUser() {
