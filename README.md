@@ -12,7 +12,7 @@ Highlight en rouge si le symbole n'est pas détecté
 -> Nombres de parenthèses, placement parenthèses,
 placement symboles logiques, succession symbole logiques
 EN GROS VERIFIER FBF
-/!\ FAUT-IL VERIFIER NON VALIDE ? (normalement non)
+/!\ SUPPOSEE NON VALIDE
 
 3. Transformation en "ou" et "et"
 Transformer équivalence et implication
@@ -39,6 +39,7 @@ FORMULE :
 String qui donne la formule (A ou B)
 Méthode pour vérifier FBF
 Méthode transformation implication
+Opérande et opérateur
 
 SCORE :
 Faire un algo qui teste toutes les formules pour trouver arbre minimal
