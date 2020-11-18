@@ -4,11 +4,21 @@
   <meta charset="utf-8">
   <title>Oracle</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="formule.js"></script>
-  <script src="node.js"></script>
-  <script src="game.js"></script>
+  <script src="js/formule.js"></script>
+  <script src="js/node.js"></script>
+  <script src="js/game.js"></script>
 </head>
 <body>
-  
+    <form action="" method="get" class="formTag">
+        <div class="form">
+            <label for="name">Entrez une formule : </label>
+            <input type="text" name="formule" id="name" required>
+        </div>
+        <div class="submit">
+            <input type="submit" value="OK">
+        </div>
+    </form>
+    <div id="nodes">
+    </div>
 </body>
 </html>
