@@ -147,7 +147,12 @@ class Formule {
     }
 
     simplificationFormule() {
-        
+
+    }
+
+    // returns a boolean if this is the negation of the parameter
+    isNegationOf(symbole) {
+
     }
 
 } 
