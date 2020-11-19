@@ -29,22 +29,111 @@ class Formule {
         for (let i = 0; i < strFormule.length; i++) {
             if (!this.regexLegalCharacters.test(strFormule.charAt(i))) {
                 /* TODO : FUNCTION TO HIGHLIGHT DETECTED CHARACTER */
-                Formule.scannerFail(i);
+                Formule.scannerFail("Caractère invalide détecté : \"" + strFormule.charAt(i) + "\"", i);
             }
         }
 
         //If only one symbol, we check if it's a logical symbol
         if(strFormule.length===1) {
-            return this.regexSymboleLogiqe.test(strFormule)
-        } else {
-            return true;
-
+            return this.regexSymboleLogiqe.test(strFormule);
         }
+        //Sanitize and normalize the inputted string so it's easier to run tests on
+        strFormule = Formule.normalizeString(strFormule);
+
+        //We check if we have the same number of opening and closing parenthesis
+        if((strFormule.split("(").length)!==(strFormule.split(")").length)) {
+            Formule.scannerFail("Mismatched number of parenthesis")
+            return false;
+        }
+
+        //Here we will test against all special cases that would invalidate a WFF (FBF)
+        let notWFF = [/\(→/,
+            /→\)/,
+            /→→/,
+            /∧→/,
+            /∨→/,
+            /¬→/,
+            /→∨/,
+            /→∧/,
+            /∧∧/,
+            /∧\)/,
+            /\(∧/,
+            /¬∧/,
+            /∨∨/,
+            /∨\)/,
+            /\(∨/,
+            /¬∨/,
+            /[A-z]¬/,
+            /¬\)/,
+            /\)¬/,
+            /^[→∧∨]/,
+            /[→∧∨¬]$/,
+            /\)\(/,
+            /\(\)/,
+            /[A-z][A-z]/
+        ]
+
+        for(let rules of notWFF) {
+            if(strFormule.search(rules)!==-1) {
+                console.log("FOUND ERROR WITH RULE : " + rules);
+                return false;
+            }
+        }
+
+        return true;
 
     }
 
-    static scannerFail(i) {
-        console.log("Detected error at : " + i)
+    static scannerFail(erreur, i) {
+        console.log(erreur);
+    }
+
+
+    /* Normalize the writing for a formula, replaces all the symbols and expressions
+    * USED TABLE :
+    * ET : &&, &, ET, AND, ∧
+    * OU : ||, |, OU, OR, ∨
+    * NON : !, NOT, NON, ¬, ~
+    * IMPLICATION : ->, =>, →, ⇒
+    * Also ignores upper and lowercase
+    * Also removes double spaces
+     */
+    static normalizeString(stringFormula) {
+        //Replace spaces, newlines and such
+        let strFinal = stringFormula.replace(/\s+/g, '');
+
+        //Replacing all connectors
+        //Be careful with handling of doubles (&& -/> &&&)
+
+        //For AND : &&, &, ET, AND, ∧
+        strFinal = strFinal
+            .replaceAll("&&", "&")
+            .replaceAll("&", "∧")
+            .replaceAll(/\AND/gi, "∧")
+            .replaceAll(/\ET/gi, "∧");
+
+        //For OR : ||, |, OU, OR, ∨
+        strFinal = strFinal
+            .replaceAll("||", "|")
+            .replaceAll("|", "∨")
+            .replaceAll(/\OU/gi, "∨")
+            .replaceAll(/\OR/gi, "∨");
+
+        //For NOT : !, NOT, NON, ¬, ~
+        strFinal = strFinal
+            .replaceAll("~", "¬")
+            .replaceAll("!", "¬")
+            .replaceAll(/\NOT/gi, "¬")
+            .replaceAll(/\NON/gi, "¬");
+
+        //For IMPLIES : ->, =>, →, ⇒
+        strFinal = strFinal
+            .replaceAll("->", "→")
+            .replaceAll("=>", "→")
+            .replaceAll("⇒", "→");
+
+        return strFinal;
+
     }
 
 
