@@ -159,34 +159,25 @@ class Formule {
     fragment() {
         let formulaShards = new Array();
         let formula = this.expression;
-        let stack = new Array();
         let shard = "";
-        let topStack = "";
         let precedentChar = "";
         for (let i = 0; i < formula.length; i++) {
             if (formula.charAt(i) == "(") {
-                stack.push(formula.charAt(i));
                 formulaShards.push(formula.charAt(i));
             } else {
-                if (stack.length != 0) {
-                    topStack = stack[stack.length - 1];
-                    if (formula.charAt(i) == ")" && topStack == "(") {
-                        stack.pop();
-                        if (shard != "") {
-                            formulaShards.push(shard);
-                        }
-                        formulaShards.push(formula.charAt(i));
-                        shard = "";
-                    } else {
-                        if (precedentChar == "(" || (shard.length != 0)) {
-                            shard += formula.charAt(i);
-                        }
-                        else {
-                            formulaShards.push(formula.charAt(i));
-                        }
+                if (formula.charAt(i) == ")") {
+                    if (shard != "") {
+                        formulaShards.push(shard);
                     }
-                } else {
                     formulaShards.push(formula.charAt(i));
+                    shard = "";
+                } else {
+                    if (precedentChar == "(" || (shard.length != 0)) {
+                        shard += formula.charAt(i);
+                    }
+                    else {
+                        formulaShards.push(formula.charAt(i));
+                    }
                 }
             }
             precedentChar = formula.charAt(i);
@@ -206,11 +197,14 @@ class Formule {
     }
 
 
-    implicationIntoOR() {
-        
+    // A→B ≡ (¬A∨B)
+    implicationEquivalence() {
+        if (this.isImplication()) {
+
+        }
     }
 
-    deMorgan(leftMember, operator, rightMember) {
+    deMorgan() {
 
     }
 
