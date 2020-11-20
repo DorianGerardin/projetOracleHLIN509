@@ -20,8 +20,7 @@ class Formule {
 
     //Constructor takes a string to initalize an object
     constructor(strFormule) {
-
-
+        this.expression = strFormule;
     }
 
     //Returns a boolean stating whether the inputted string is an FBF
@@ -146,12 +145,72 @@ class Formule {
 
     }
 
-    simplificationFormule() {
+    simplificationFormule(stringFormula) {
 
     }
 
     // returns a boolean if this is the negation of the parameter
     isNegationOf(symbole) {
+
+    }
+
+    //Fragment this.expression into an array which contains strings. Each charcater of the expression is an element of the array.
+    //However, members in parenthesis in this.expression are only one element of the array
+    fragment() {
+        let formulaShards = new Array();
+        let formula = this.expression;
+        let stack = new Array();
+        let shard = "";
+        let topStack = "";
+        let precedentChar = "";
+        for (let i = 0; i < formula.length; i++) {
+            if (formula.charAt(i) == "(") {
+                stack.push(formula.charAt(i));
+                formulaShards.push(formula.charAt(i));
+            } else {
+                if (stack.length != 0) {
+                    topStack = stack[stack.length - 1];
+                    if (formula.charAt(i) == ")" && topStack == "(") {
+                        stack.pop();
+                        if (shard != "") {
+                            formulaShards.push(shard);
+                        }
+                        formulaShards.push(formula.charAt(i));
+                        shard = "";
+                    } else {
+                        if (precedentChar == "(" || (shard.length != 0)) {
+                            shard += formula.charAt(i);
+                        }
+                        else {
+                            formulaShards.push(formula.charAt(i));
+                        }
+                    }
+                } else {
+                    formulaShards.push(formula.charAt(i));
+                }
+            }
+            precedentChar = formula.charAt(i);
+        }
+        return formulaShards;
+    }
+
+    isImplication() {
+        let formulaShards = this.fragment();
+        let lastAloneConnector = "";
+        formulaShards.forEach(shard => {
+            if (shard == "→" || shard == "∧" || shard == "∨") {
+                lastAloneConnector = shard;
+            }
+        });
+        return lastAloneConnector == "→" ? true : false;
+    }
+
+
+    implicationIntoOR() {
+        
+    }
+
+    deMorgan(leftMember, operator, rightMember) {
 
     }
 
