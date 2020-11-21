@@ -199,9 +199,17 @@ class Formule {
 
     // A→B ≡ (¬A∨B)
     implicationEquivalence() {
-        if (this.isImplication()) {
+        // if (this.isImplication()) {
 
-        }
+        // } else {
+        //     console.log("equivalence impossible");
+        // }
+        let formulaShards = this.fragment();
+        formulaShards.forEach(shard => {
+            if (shard.isImplication()) {
+                lastAloneConnector = shard;
+            }
+        });
     }
 
     deMorgan() {
