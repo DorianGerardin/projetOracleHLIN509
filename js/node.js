@@ -22,7 +22,7 @@ class Node {
 
     // Returns a boolean if the node get a contradiction
     isClosed() {
-        let symbolesTab = new Array();
+        let symbolesTab = [];
         this.listeFormules.forEach(formule => {
             if (formule.getIsSymboleLogique()) {
                 symbolesTab.push(formule);
