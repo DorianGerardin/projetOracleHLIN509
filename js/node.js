@@ -14,7 +14,7 @@ class Node {
         let thisNode = document.createElement("div");
         this.listeFormules.forEach(formule => { // a modifier plus tard (formule.getValue() ?)
             let formuleTag = document.createElement("span");
-            formuleTag.innerHTML = formule;
+            formuleTag.innerHTML = formule.getExpression();
             thisNode.appendChild(formuleTag);
         });
         divNode.appendChild(thisNode);
@@ -24,7 +24,7 @@ class Node {
     isClosed() {
         let symbolesTab = new Array();
         this.listeFormules.forEach(formule => {
-            if (formule.isSymboleLogique()) {
+            if (formule.getIsSymboleLogique()) {
                 symbolesTab.push(formule);
             }
         });

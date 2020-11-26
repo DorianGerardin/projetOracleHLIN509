@@ -21,6 +21,7 @@ class Formule {
     //Constructor takes a string to initalize an object
     constructor(strFormule) {
         this.expression = strFormule;
+        this.isSymboleLogique = this.isSymboleLogiqueF(strFormule);
     }
 
     //Returns a boolean stating whether the inputted string is an FBF
@@ -141,79 +142,183 @@ class Formule {
 
     }
 
-    isSymboleLogique() {
-
+    isSymboleLogiqueF(formule) {
+        return (formule.length === 1 || formule.length === 2);
     }
 
-    simplificationFormule(stringFormula) {
-
+    getIsSymboleLogique() {
+        return this.isSymboleLogique;
     }
 
     // returns a boolean if this is the negation of the parameter
     isNegationOf(symbole) {
-
+        if (this.expression.length <= 2) {
+            return (this.expression === "¬" + symbole || "¬" + this.expression === symbole);
+        } else {
+            console.log("Impossible d'appeler cette méthode sur autre chose qu'un litteral ou sa négation");
+        }
+        
     }
 
-    //Fragment this.expression into an array which contains strings. Each charcater of the expression is an element of the array.
-    //However, members in parenthesis in this.expression are only one element of the array
+    getExpression() {
+        return this.expression;
+    }
+
     fragment() {
         let formulaShards = new Array();
         let formula = this.expression;
-        let shard = "";
-        let precedentChar = "";
+        let beginShard = 0;
+        let nbParenthesis = 0;
+        if (this.expression.length === 1) {
+            return [this.expression];
+        }
         for (let i = 0; i < formula.length; i++) {
-            if (formula.charAt(i) == "(") {
-                formulaShards.push(formula.charAt(i));
-            } else {
-                if (formula.charAt(i) == ")") {
-                    if (shard != "") {
-                        formulaShards.push(shard);
+            let currentChar = formula.charAt(i);
+            switch (currentChar) {
+                case '(' : 
+                    if (nbParenthesis === 0) beginShard = i;
+                    nbParenthesis++;
+                    break;
+                case ')' :
+                    nbParenthesis--;
+                    if (nbParenthesis === 0) {
+                        formulaShards.push(formula.substring(beginShard+1, i));
+                        //beginShard = i + 1;
                     }
-                    formulaShards.push(formula.charAt(i));
-                    shard = "";
-                } else {
-                    if (precedentChar == "(" || (shard.length != 0)) {
-                        shard += formula.charAt(i);
+                    break;
+                default :
+                    if (nbParenthesis === 0) {
+                        formulaShards.push(currentChar);
+                        //beginShard = i + 1;
                     }
-                    else {
-                        formulaShards.push(formula.charAt(i));
+                    break;
+            }
+        }
+        return formulaShards.length === 1 ? new Formule(formulaShards[0]).fragment() : formulaShards;
+    }
+
+    //returns an array of length 2. Array[0] : last operator
+    //                              Array[1] : its position in the fragmented tab
+    getLastConnector() {
+        let formulaShards = this.fragment();
+        if (formulaShards.length <= 2 && formulaShards[0].charAt(0) === "¬") {
+            let formula = new Formule(formulaShards[1]);
+            if (formula.fragment()[0] === "¬") {
+                return ["¬¬", null];
+            }
+            let tab = formula.getLastConnector();
+            tab[0] = "¬" + tab[0];
+            return tab;
+        } else if (formulaShards.length > 2 && formulaShards[0] === "¬") {
+            if (formulaShards[1] === "¬") {
+                return ["¬¬", null];
+            }
+        } 
+        let lastAloneConnectorPosition = null;
+        let lastAloneConnector = "";
+        let i = 0;
+        formulaShards.forEach(shard => {
+            i++;
+            if (shard === "→" || shard === "∧" || shard === "∨") {
+                lastAloneConnector = shard;
+                lastAloneConnectorPosition = i - 1;
+            }
+        });
+        return [lastAloneConnector, lastAloneConnectorPosition];
+
+    }
+
+    deleteUselessNegations() {
+        let lastConnectorArray = this.getLastConnector();
+        if (lastConnectorArray[0] === "¬¬") {
+            let formulaShards = this.fragment();
+            if (formulaShards.length > 2) {
+                formulaShards.shift();
+                formulaShards.shift();
+                let remainFormula = "";
+                for (let i = 0; i < formulaShards.length; i++) {
+                    if (formulaShards[i].length > 1) {
+                        remainFormula += "(" + formulaShards[i] + ")";
+                    } else {
+                        remainFormula += formulaShards[i];
                     }
                 }
+                return [remainFormula];
+            } else {
+                let subFormula = new Formule(formulaShards[1]);
+                return [subFormula.fragment()[1]];
             }
-            precedentChar = formula.charAt(i);
         }
-        return formulaShards;
+        else {
+            console.log("Impossible d'appeler cette méthode sur cette formule");
+        }
     }
 
-    isImplication() {
+    getMembers() {
+        let lastConnectorArray = this.getLastConnector();
+        let lastAloneConnectorPosition = lastConnectorArray[1];
         let formulaShards = this.fragment();
-        let lastAloneConnector = "";
-        formulaShards.forEach(shard => {
-            if (shard == "→" || shard == "∧" || shard == "∨") {
-                lastAloneConnector = shard;
+        let A = "";
+        let B = "";
+        if (lastConnectorArray[0] === "¬¬") {
+            // let subFormula = new Formule(formulaShards[1]);
+            // return [subFormula.fragment()[1]];
+            return [this.expression];
+        }
+        if (formulaShards.length === 1) {
+            return [formulaShards[0]];
+        } else if (formulaShards.length === 2) {
+            for (let i = 0; i < lastAloneConnectorPosition; i++) {
+                let litteral = formulaShards[1][i];
+                A += litteral;
             }
-        });
-        return lastAloneConnector == "→" ? true : false;
+        } 
+        else {
+            for (let i = lastAloneConnectorPosition + 1; i < formulaShards.length; i++) {
+                B += formulaShards[i];
+            }
+            for (let i = 0; i < lastAloneConnectorPosition; i++) {
+                let formula = new Formule(formulaShards[i]);
+                A += formulaShards[i];
+            }
+        }
+        return [A, B];
     }
 
-
-    // A→B ≡ (¬A∨B)
-    implicationEquivalence() {
-        // if (this.isImplication()) {
-
-        // } else {
-        //     console.log("equivalence impossible");
-        // }
-        let formulaShards = this.fragment();
-        formulaShards.forEach(shard => {
-            if (shard.isImplication()) {
-                lastAloneConnector = shard;
-            }
-        });
+    children() {
+        let lastConnectorArray = this.getLastConnector();
+        let lastAloneConnector = lastConnectorArray[0];
+        let members = this.getMembers();
+        switch (lastAloneConnector) {
+            case ("") :
+                return [1, this.expression];
+            case ("¬¬") :
+                return [1, this.deleteUselessNegations()];
+            case ("¬∨") :
+                return [1, "¬" + members[0], "¬" + members[1]];
+            case ("¬∧") :
+                return [2, "¬" + members[0], "¬" + members[1]];
+            case ("¬→") :
+                return [1, members[0], "¬" + members[1]];
+            case ("∨") :
+                return [2, members[0], members[1]];
+            case ("∧") :
+                return [1, members[0], members[1]];
+            case ("→") :
+                return [1, "¬" + members[0], members[1]];
+        }
     }
 
-    deMorgan() {
-
+    formulasWithChildren() {
+        let children = this.children();
+        console.log(children);
+        let arrayFormulas = [];
+        for (let i = 1; i < children.length; i++) {
+            console.log(children[i]);
+            arrayFormulas.push(new Formule(children[i]));
+            console.log(arrayFormulas);
+        }
+        return arrayFormulas;
     }
 
 } 
