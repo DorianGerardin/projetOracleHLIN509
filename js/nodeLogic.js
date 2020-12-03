@@ -6,6 +6,7 @@ class NodeLogic {
         for(let formula of listeFormules) {
             this.listeFormules.push(new Formule(formula))
         }
+        this.isClosedByUser = false;
     }
 
     // Returns a boolean if the node get a contradiction
@@ -29,8 +30,8 @@ class NodeLogic {
         return false;
     }
 
-    isClosedByUser() {
+    // isClosedByUser() {
 
-    }
+    // }
 
 }

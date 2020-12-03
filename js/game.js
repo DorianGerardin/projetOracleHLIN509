@@ -7,7 +7,10 @@ input.value = "¬(p→((p→q)→q))";
 
 function fillInput(str) {
     let input = document.getElementById("formuleInput");
-    input.value += str;
+    let cursorPosition = input.selectionStart;
+    input.value = input.value.substring(0, cursorPosition) + str + input.value.substring(cursorPosition);
+    input.focus();
+    input.setSelectionRange(cursorPosition + 1, cursorPosition + 1)
 }
 
 function enterFormula() {
@@ -83,10 +86,9 @@ function next(e) {
     allFormulas.forEach(e => e.classList.remove("formuleSpan"))
 
     allFormulas = Array.from(allFormulas).map(e => e.innerHTML)
-    if((new NodeLogic(allFormulas)).isClosed()) {
+    if(new NodeLogic(allFormulas).isClosed()) {
         score -= 50;
     }
-
     //Désactive l'action
     e.onclick=""
     //Ajouter une croix pour dire qu'on a selectionne la formule
@@ -143,8 +145,13 @@ function confirmClose(node) {
     if (confirm("Voulez-vous fermer cette branche ?")) {
         let allFormulas = node.querySelectorAll("span")
         allFormulas = Array.from(allFormulas).map(e => e.innerHTML)
-        if((new NodeLogic(allFormulas)).isClosed()) {
-            console.log("La branche a été fermée")
+        if((newNode = new NodeLogic(allFormulas)).isClosed()) {
+            node.querySelectorAll("span").forEach(formule => {
+                formule.onclick = "";
+                formule.classList.remove("formuleSpan");
+                formule.classList.add("notSelected");
+            });
+            alert("La branche a été fermée")
             node.style.border = "2px solid green";
             node.style.borderRadius = "15px";
             node.removeEventListener('contextmenu', handleContextMenu)
