@@ -13,6 +13,23 @@ function fillInput(str) {
     input.setSelectionRange(cursorPosition + 1, cursorPosition + 1)
 }
 
+function reset() {
+    let tree = document.getElementById("tree-simple");
+    document.body.removeChild(tree);
+
+    let form = document.getElementById("form");
+    form.style.display = "flex";
+
+    let tips = document.getElementById("tips");
+    tips.style.display = "none";
+
+    let signature = document.getElementById("signature");
+    signature.style.position = "relative";
+
+    let resetButton = document.getElementById("resetButton");
+    resetButton.style.display = "none";
+}
+
 function enterFormula() {
 
     let input = document.getElementById("formuleInput");
@@ -27,6 +44,9 @@ function enterFormula() {
     signature.style.position = "absolute";
     signature.style.bottom = "20px";
     signature.style.left = "20px";
+
+    let resetButton = document.getElementById("resetButton");
+    resetButton.style.display = "flex";
 
 
     simple_chart_config = {

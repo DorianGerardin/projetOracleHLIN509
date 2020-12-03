@@ -25,6 +25,12 @@ body {
     margin-right: 10px;
     transition-duration: 0.4s;
 }
+.tips div:hover span{
+    font-size: 24px;
+}
+.tips div span{
+    transition-duration: 0.4s;
+}
 .tipIcon:hover {
     width: 78px;
     height: 78px;
