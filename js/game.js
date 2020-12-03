@@ -6,7 +6,6 @@ let input = document.getElementById("formuleInput");
 input.value = "¬(p→((p→q)→q))";
 
 function fillInput(str) {
-    let input = document.getElementById("formuleInput");
     let cursorPosition = input.selectionStart;
     input.value = input.value.substring(0, cursorPosition) + str + input.value.substring(cursorPosition);
     input.focus();
@@ -14,6 +13,43 @@ function fillInput(str) {
 }
 
 function reset() {
+    let tree = document.getElementById("tree-simple");
+    document.body.removeChild(tree);
+
+    simple_chart_config = {
+        chart: {
+            container: "#tree-simple",
+            connectors: {
+                type : "straight"
+            },
+            scrollbar: "fancy",
+            animation: {
+                connectorsAnimation : "linear",
+                nodeAnimation : "linear",
+            },
+            node : {
+                collapsable: false,
+                HTMLclass : "nodeFormule"
+            }
+        },
+        
+        nodeStructure: {
+            innerHTML : "<span id='root' class='formulaSpan'>" + root + "</span>",
+            HTMLid : "0",
+            collapsable : false,
+        }
+    };
+
+    document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 100%;'> </div>";
+    my_chart = new Treant(simple_chart_config);
+    next(document.getElementById("root"));
+
+}
+
+function changeFormula() {
+
+    input.value = "";
+
     let tree = document.getElementById("tree-simple");
     document.body.removeChild(tree);
 
@@ -26,13 +62,12 @@ function reset() {
     let signature = document.getElementById("signature");
     signature.style.position = "relative";
 
-    let resetButton = document.getElementById("resetButton");
-    resetButton.style.display = "none";
+    let gameButtons = document.getElementById("gameButtons");
+    gameButtons.style.display = "none";
 }
 
 function enterFormula() {
 
-    let input = document.getElementById("formuleInput");
     let form = document.getElementById("form");
     form.style.display = "none";
     root = input.value;
@@ -45,9 +80,9 @@ function enterFormula() {
     signature.style.bottom = "20px";
     signature.style.left = "20px";
 
-    let resetButton = document.getElementById("resetButton");
-    resetButton.style.display = "flex";
-
+    let gameButtons = document.getElementById("gameButtons");
+    gameButtons.style.display = "flex";
+    gameButtons.style.flexDirection = "column";
 
     simple_chart_config = {
         chart: {

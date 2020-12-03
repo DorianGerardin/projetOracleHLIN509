@@ -36,8 +36,9 @@
         </div>
         <input class="button" style="--fontSize: 30px; --margin:0px; --padding: 14px 40px" type="submit" onclick="enterFormula()" value="VALIDER">
     </form>
-    <div>
-        <input id="resetButton" class="button" style="--fontSize: 20px; --margin:0px; --padding: 10px 20px; position: absolute; bottom: 40px; right:40px; display: none; z-index: 5;" type="submit" onclick="reset()" value="Changer de formule">
+    <div id="gameButtons" style="position: absolute; bottom: 40px; right:40px; z-index: 5; display: none;">
+        <input id="resetButton" class="button" style="--fontSize: 20px; --margin:0px; --padding: 10px 20px;" type="submit" onclick="reset()" value="Reset la partie">
+        <input id="changeFormulaButton" class="button" style="--fontSize: 20px; --margin:0px; --padding: 10px 20px;" type="submit" onclick="changeFormula()" value="Changer de formule">
     </div>
     <div class="signature" id="signature">
         <span>Made by Tristan T. and Dorian G.</span>
