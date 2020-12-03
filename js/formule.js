@@ -23,7 +23,7 @@ class Formule {
     // returns a boolean if this is the negation of the parameter
     isNegationOf(symbole) {
         if (this.expression.length <= 2) {
-            return (this.expression === "¬" + symbole || "¬" + this.expression === symbole);
+            return (this.expression === "¬" + symbole.expression || "¬" + this.expression === symbole.expression);
         } else {
             console.log("Impossible d'appeler cette méthode sur autre chose qu'un litteral ou sa négation");
         }

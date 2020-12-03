@@ -2,21 +2,140 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
 }
 body {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
+    background-color: #A9EDEE;
+    flex-direction: column;
 }
+.tips{
+    align-items: center;
+    position: absolute;
+    top: 10px;
+    left:10px;
+    z-index: 5;
+}
+.tipIcon {
+    width: 64px;
+    height: 64px;
+    margin-right: 10px;
+    transition-duration: 0.4s;
+}
+.tipIcon:hover {
+    width: 78px;
+    height: 78px;
+}
+
+/* ----------------------------------------   FORM  ----------------------------------------------- */
 .form {
     display: flex;
     flex-direction: column;
     text-align: center;
+    width: 100%;
+}
+.formLabel {
+    font-size: 42px;
+    color : grey;
+    padding-bottom: 20px;
 }
 .formTag {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 80vw;
+}
+.button:focus {
+    outline: none;
+}
+.button:hover{
+    cursor: pointer;
+    background-color: #54D6CE; /* Green */
+    color: white;
+}
+.button{
+    margin: var(--margin);
+    margin-top: 5px;
+    font-size: var(--fontSize);
+    padding: var(--padding);
+    border-radius: 10px;
+    background-color: #11ffee00;
+    border:solid 3px #54D6CE;
+    color:grey;
+    transition-duration: 0.4s;
+}
+.button:focus {
+    outline: none;
+}
+.button:hover{
+    cursor: pointer;
+    background-color: #54D6CE; /* Green */
+    color: white;
+}
+#formuleInput {
+    width: 100%;
+    padding: 20px 25px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border-radius: 15px;
+    border: 0px;
+    font-size: 18px;
+    box-shadow: 3px 3px 3px #cccccc;
+    flex-grow:2;
+}
+#formuleInput:focus {
+    outline: none;
 }
 
+.signature{
+    font-size: 25px;
+}
+
+/* ----------------------------------------   TREE  ----------------------------------------------- */
+
+.selected:before {
+    font-size: 22px;
+    content:"✘ ";
+    color : red;
+    position: absolute;
+    left : -15px;
+}
+
+.selected {
+    font-size: 22px;
+    color:grey;
+    display: block;
+    text-align: center;
+}
+
+.nodeFormule {
+    padding: 10px;
+}
+
+.notSelected {
+    font-size: 22px;
+    color:grey;
+    display: block;
+    text-align: center;
+}
+
+/* Hack because of a bug in Treant */
+.collapse-switch {
+    display: none;
+    visibility: hidden;
+    user-select: none;
+    user-focus: none;
+}
+.formuleSpan:hover {
+    background-color: #CAC7C6;
+    cursor:pointer;
+    border-radius: 7px;
+}
+.formuleSpan {
+    font-size: 22px;
+   display: block;
+   text-align: center;
+}
