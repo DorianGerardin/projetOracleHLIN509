@@ -74,40 +74,51 @@ class Formule {
         //Formule fragmenter à traiter
         let arrForm = this.fragment();
 
+        for(let i = 0; i<arrForm.length-1; i++) { //Le dernier élément ne peut pas être un non
+            if(arrForm[i]==="¬" && arrForm[i+1]!=="¬" && arrForm[i+1].length>2) { //Si on rencontre un non, on vérifie que l'élément suivant ne soit pas un non ou un littéral.
+                //Si les conditions sont réunis on parenthèse le prochain élément
+                arrForm[i+1] = "(" + arrForm[i+1] + ")"
+            }
+        }
+
         //Position de l'opérateur
         let posOperator;
 
-        //Cas de la double négation
-        if(arrForm[0]==="¬" && arrForm[1]==="¬") {
-            return ["¬¬", 0, [new Formule(arrForm[2])]];
-        //Cas d'une négation
-        } else if(arrForm[0]==="¬" && arrForm.length===2) {
+
+        if ((posOperator = arrForm.lastIndexOf("→")) > -1) {
+            return ["→", posOperator, [new Formule("¬(" + arrForm.slice(0, posOperator).join("") + ")"), new Formule(arrForm.slice(posOperator + 1).join(""))]]
+        } else if ((posOperator = arrForm.lastIndexOf("∨")) > -1) {
+            return ["∨", posOperator, [new Formule(arrForm.slice(0, posOperator).join("")), new Formule(arrForm.slice(posOperator + 1).join(""))]];
+        } else if ((posOperator = arrForm.lastIndexOf("∧")) > -1) {
+            return ["∧", posOperator, [new Formule(arrForm.slice(0, posOperator).join("")), new Formule(arrForm.slice(posOperator + 1).join(""))]];
+        } else if (arrForm[0] === "¬" && arrForm[1] === "¬") { //Double négation
+            if(arrForm.length===3) {
+                return ["¬¬", 0, [new Formule(arrForm[2].slice(1, -1))]];
+            } else {
+                return ["¬¬", 0, [new Formule(arrForm.slice(2).join(""))]];
+            }
+
+        } else if (arrForm[0] === "¬" && arrForm.length === 2) { //Cas d'une négation
             let formuleSansInverse = new Formule(arrForm[1])
 
             //Si la sous formule commence aussi par une négation alors la prochaine opération est une double négation
             let fragmentFormuleSansInverse = formuleSansInverse.fragment();
-            if(fragmentFormuleSansInverse[0] === "¬" && fragmentFormuleSansInverse[1]!=="¬" && fragmentFormuleSansInverse.length===2) return ["¬¬", 0, [new Formule(fragmentFormuleSansInverse.slice(1).join(""))]];
+            if (fragmentFormuleSansInverse[0] === "¬" && fragmentFormuleSansInverse[1] !== "¬" && fragmentFormuleSansInverse.length === 2) return ["¬¬", 0, [new Formule(fragmentFormuleSansInverse.slice(1).join(""))]];
 
             //Sinon on regarde l'opérateur principal de la sous formule associée
             let operator = formuleSansInverse.nextOperator();
             switch (operator[0]) {
                 case "∧":
-                    return ["¬∧", null, [new Formule("¬(" + fragmentFormuleSansInverse.slice(0, operator[1]).join("")+")"), new Formule("¬(" + fragmentFormuleSansInverse.slice(operator[1]+1).join("") + ")")]]
+                    return ["¬∧", null, [new Formule("¬(" + fragmentFormuleSansInverse.slice(0, operator[1]).join("") + ")"), new Formule("¬(" + fragmentFormuleSansInverse.slice(operator[1] + 1).join("") + ")")]]
                 case "∨":
-                    return ["¬∨", null, [new Formule("¬(" + fragmentFormuleSansInverse.slice(0, operator[1]).join("")+")"), new Formule("¬(" + fragmentFormuleSansInverse.slice(operator[1]+1).join("") + ")")]]
+                    return ["¬∨", null, [new Formule("¬(" + fragmentFormuleSansInverse.slice(0, operator[1]).join("") + ")"), new Formule("¬(" + fragmentFormuleSansInverse.slice(operator[1] + 1).join("") + ")")]]
                 case "→":
-                    return ["¬→", null, [new Formule(fragmentFormuleSansInverse.slice(0, operator[1]).join("")), new Formule("¬(" + fragmentFormuleSansInverse.slice(operator[1]+1).join("") + ")")]]
+                    return ["¬→", null, [new Formule(fragmentFormuleSansInverse.slice(0, operator[1]).join("")), new Formule("¬(" + fragmentFormuleSansInverse.slice(operator[1] + 1).join("") + ")")]]
                 case "¬¬":
-                    return ["¬", null, [new Formule("¬(" + fragmentFormuleSansInverse.slice(operator[1]+1).join("")+")")]]
+                    return ["¬", null, [new Formule("¬(" + fragmentFormuleSansInverse[2] + ")")]]
                 default:
                     return "ERROR_NO";
             }
-        }else if ((posOperator = arrForm.lastIndexOf("→")) > -1) {
-            return ["→", posOperator, [new Formule("¬(" + arrForm.slice(0, posOperator).join("") + ")"), new Formule(arrForm.slice(posOperator+1).join(""))]]
-        } else if ((posOperator = arrForm.lastIndexOf("∨")) > -1) {
-            return ["∨", posOperator, [new Formule(arrForm.slice(0, posOperator).join("")), new Formule(arrForm.slice(posOperator+1).join(""))]];
-        } else if((posOperator = arrForm.lastIndexOf("∧")) > -1) {
-            return ["∧", posOperator, [new Formule(arrForm.slice(0, posOperator).join("")), new Formule(arrForm.slice(posOperator+1).join(""))]];
         } else {
             return "ERROR";
         }

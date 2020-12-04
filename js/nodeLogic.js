@@ -21,17 +21,11 @@ class NodeLogic {
         for (let i = 0; i < symbolesTab.length; i++) {
             for (let j = i + 1; j < symbolesTab.length; j++) {
                 if (symbolesTab[i].isNegationOf(symbolesTab[j])) {
-                    console.log("EST FERMEE")
                     return true;
                 }
             }
         }
-        console.log("N'EST PAS FERMEE")
         return false;
     }
-
-    // isClosedByUser() {
-
-    // }
 
 }
