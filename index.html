@@ -23,9 +23,9 @@
             <span>- Faites un clic droit n'importe où sur un noeud pour le fermer</span>
         </div>
     </div>
-    <form action="" method="get" class="formTag" id="form">
+    <form action="" method="get" class="formTag" id="form" onsubmit="enterFormula()">
         <div class="form">
-            <label for="name" class="formLabel">Entrez une formule : </label>
+            <label for="name" class="formLabel">ORACLE</label>
             <div>
                 <input class="button" style="--fontSize: 20px; --margin : 5px; --padding: 10px 20px" type="button" onclick="fillInput('¬')" value="¬">
                 <input class="button" style="--fontSize: 20px; --margin : 5px; --padding: 10px 20px" type="button" onclick="fillInput('→')" value="→">
@@ -34,14 +34,32 @@
             </div>
             <input type="text" name="formule" id="formuleInput" placeHolder="Entrez votre formule ..." required>
         </div>
-        <input class="button" style="--fontSize: 30px; --margin:0px; --padding: 14px 40px" type="submit" onclick="enterFormula()" value="VALIDER">
+        <input class="button" style="--fontSize: 30px; --margin:0px; --padding: 14px 40px" type="submit" value="VALIDER">
     </form>
     <div id="gameButtons" style="position: absolute; bottom: 40px; right:40px; z-index: 5; display: none;">
-        <input id="resetButton" class="button" style="--fontSize: 20px; --margin:0px; --padding: 10px 20px;" type="submit" onclick="reset()" value="Reset la partie">
-        <input id="changeFormulaButton" class="button" style="--fontSize: 20px; --margin:0px; --padding: 10px 20px;" type="submit" onclick="changeFormula()" value="Changer de formule">
+        <input id="resetButton" class="button" style="--fontSize: 20px; --margin:0px; --padding: 10px 20px;" type="button" onclick="reset()" value="Reset la partie">
+        <input id="changeFormulaButton" class="button" style="--fontSize: 20px; --margin:0px; --padding: 10px 20px;" type="button" onclick="changeFormula()" value="Changer de formule">
     </div>
     <div class="signature" id="signature">
         <span>Made by Tristan T. and Dorian G.</span>
+    </div>
+    <div style="display: none;" class="score" id="score">
+        <span></span>
+    </div>
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h1>Résultats de la partie</h1>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer">
+                <input id="replay" class="button" style="--fontSize: 20px; --margin:0px; --padding: 10px 20px;" onclick="changeFormula()" type="button" value="Rejouer">
+            </div>
+        </div>
+      
     </div>
 </body>
 <script src="treant/vendor/raphael.js"></script>
@@ -52,4 +70,5 @@
 <script src="./js/formule.js"></script>
 <script src="./js/nodeLogic.js"></script>
 <script src="./js/game.js"></script>
+<script src="./js/score.js"></script>
 </html>

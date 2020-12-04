@@ -25,15 +25,23 @@ body {
     margin-right: 10px;
     transition-duration: 0.4s;
 }
-.tips div:hover span{
+.tips:hover div span{
     font-size: 24px;
+    cursor: default;
+}
+.tips:hover .tipIcon{
+    width: 78px;
+    height: 78px;
 }
 .tips div span{
     transition-duration: 0.4s;
 }
-.tipIcon:hover {
-    width: 78px;
-    height: 78px;
+
+.score {
+    position: absolute;
+    top : 30px;
+    right : 30px;
+    font-size: 40px;
 }
 
 /* ----------------------------------------   FORM  ----------------------------------------------- */
@@ -44,8 +52,8 @@ body {
     width: 100%;
 }
 .formLabel {
-    font-size: 42px;
-    color : grey;
+    font-size: 52px;
+    color : #976B99;
     padding-bottom: 20px;
 }
 .formTag {
@@ -59,7 +67,7 @@ body {
 }
 .button:hover{
     cursor: pointer;
-    background-color: #54D6CE; /* Green */
+    background-color: #54D6CE;
     color: white;
 }
 .button{
@@ -145,3 +153,77 @@ body {
    display: block;
    text-align: center;
 }
+
+
+/* ----------------------------------------   MODAL  ----------------------------------------------- */
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+.close:hover,
+.close:focus {
+  color: grey;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+
+.modal-header {
+    padding: 10px 16px;
+    color: black;
+    text-align: center;
+  }
+  
+  /* Modal Body */
+  .modal-body {
+      padding: 10px 16px;
+    }
+  
+  /* Modal Footer */
+  .modal-footer {
+    display: flex;
+    padding: 10px 16px;
+    color: white;
+    justify-content: center;
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    position: relative;
+    top:30%;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 50%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    animation-name: animatetop;
+    animation-duration: 0.4s
+  }
+  
+  /* Add Animation */
+  @keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 30%; opacity: 1}
+  }
+
+  @-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:30%; opacity:1}
+  }
