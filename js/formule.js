@@ -74,30 +74,27 @@ class Formule {
         //Formule fragmenter à traiter
         let arrForm = this.fragment();
 
-        for(let i = 0; i<arrForm.length-1; i++) { //Le dernier élément ne peut pas être un non
-            if(arrForm[i]==="¬" && arrForm[i+1]!=="¬" && arrForm[i+1].length>2) { //Si on rencontre un non, on vérifie que l'élément suivant ne soit pas un non ou un littéral.
-                //Si les conditions sont réunis on parenthèse le prochain élément
-                arrForm[i+1] = "(" + arrForm[i+1] + ")"
-            }
+
+        for(let i = 0; i<arrForm.length; i++) {
+            if(arrForm[i].length!==1) arrForm[i] = "(" + arrForm[i] + ")"
         }
+
 
         //Position de l'opérateur
         let posOperator;
 
 
         if ((posOperator = arrForm.lastIndexOf("→")) > -1) {
-            return ["→", posOperator, [new Formule("¬(" + arrForm.slice(0, posOperator).join("") + ")"), new Formule(arrForm.slice(posOperator + 1).join(""))]]
+            return ["→", posOperator, [Formule.getFormulaFromList(arrForm.slice(0, posOperator), true), Formule.getFormulaFromList(arrForm.slice(posOperator + 1), false)]]
         } else if ((posOperator = arrForm.lastIndexOf("∨")) > -1) {
-            return ["∨", posOperator, [new Formule(arrForm.slice(0, posOperator).join("")), new Formule(arrForm.slice(posOperator + 1).join(""))]];
+            return ["∨", posOperator, [Formule.getFormulaFromList(arrForm.slice(0, posOperator), false), Formule.getFormulaFromList(arrForm.slice(posOperator + 1), false)]];
         } else if ((posOperator = arrForm.lastIndexOf("∧")) > -1) {
-            return ["∧", posOperator, [new Formule(arrForm.slice(0, posOperator).join("")), new Formule(arrForm.slice(posOperator + 1).join(""))]];
+            return ["∧", posOperator, [Formule.getFormulaFromList(arrForm.slice(0, posOperator), false), Formule.getFormulaFromList(arrForm.slice(posOperator + 1), false)]];
         } else if (arrForm[0] === "¬" && arrForm[1] === "¬") { //Double négation
-            if(arrForm.length===3) {
-                return ["¬¬", 0, [new Formule(arrForm[2].slice(1, -1))]];
-            } else {
-                return ["¬¬", 0, [new Formule(arrForm.slice(2).join(""))]];
-            }
-
+            console.log("HERE")
+            console.log(arrForm)
+            console.log(arrForm.slice(2))
+            return ["¬¬", 0, [Formule.getFormulaFromList(arrForm.slice(2), false)]];
         } else if (arrForm[0] === "¬" && arrForm.length === 2) { //Cas d'une négation
             let formuleSansInverse = new Formule(arrForm[1])
 
@@ -105,22 +102,42 @@ class Formule {
             let fragmentFormuleSansInverse = formuleSansInverse.fragment();
             if (fragmentFormuleSansInverse[0] === "¬" && fragmentFormuleSansInverse[1] !== "¬" && fragmentFormuleSansInverse.length === 2) return ["¬¬", 0, [new Formule(fragmentFormuleSansInverse.slice(1).join(""))]];
 
+            for(let i = 0; i<fragmentFormuleSansInverse.length; i++) {
+                if(fragmentFormuleSansInverse[i].length!==1) fragmentFormuleSansInverse[i] = "(" + fragmentFormuleSansInverse[i] + ")"
+            }
+
             //Sinon on regarde l'opérateur principal de la sous formule associée
             let operator = formuleSansInverse.nextOperator();
             switch (operator[0]) {
                 case "∧":
-                    return ["¬∧", null, [new Formule("¬(" + fragmentFormuleSansInverse.slice(0, operator[1]).join("") + ")"), new Formule("¬(" + fragmentFormuleSansInverse.slice(operator[1] + 1).join("") + ")")]]
+                    return ["¬∧", null, [Formule.getFormulaFromList(fragmentFormuleSansInverse.slice(0, operator[1]), true), Formule.getFormulaFromList(fragmentFormuleSansInverse.slice(operator[1] + 1), true)]]
                 case "∨":
-                    return ["¬∨", null, [new Formule("¬(" + fragmentFormuleSansInverse.slice(0, operator[1]).join("") + ")"), new Formule("¬(" + fragmentFormuleSansInverse.slice(operator[1] + 1).join("") + ")")]]
+                    return ["¬∨", null, [Formule.getFormulaFromList(fragmentFormuleSansInverse.slice(0, operator[1]), true), Formule.getFormulaFromList(fragmentFormuleSansInverse.slice(operator[1] + 1), true)]]
                 case "→":
-                    return ["¬→", null, [new Formule(fragmentFormuleSansInverse.slice(0, operator[1]).join("")), new Formule("¬(" + fragmentFormuleSansInverse.slice(operator[1] + 1).join("") + ")")]]
+                    return ["¬→", null, [Formule.getFormulaFromList(fragmentFormuleSansInverse.slice(0, operator[1]), false), Formule.getFormulaFromList(fragmentFormuleSansInverse.slice(operator[1] + 1), true)]]
                 case "¬¬":
-                    return ["¬", null, [new Formule("¬(" + fragmentFormuleSansInverse[2] + ")")]]
+                    return ["¬", null, [new Formule("¬" + fragmentFormuleSansInverse[2])]]
                 default:
                     return "ERROR_NO";
             }
         } else {
             return "ERROR";
+        }
+    }
+
+    static getFormulaFromList(listeFormule, negation) {
+        if(negation) {
+            if(listeFormule.join("")[0]!=="(" && listeFormule.join("").length>2) {
+                console.log("ME")
+                return new Formule("¬(" + listeFormule.join("") + ")")
+            } else {
+                return new Formule("¬" + listeFormule.join(""))
+            }
+        } else if(listeFormule.length===1 && !(new Formule(listeFormule[0])).isSymboleLogique) {
+            console.log((new Formule(listeFormule[0])).isSymboleLogique)
+            return new Formule(listeFormule[0].slice(1, -1))
+        } else {
+            return new Formule(listeFormule.join(""))
         }
     }
 
