@@ -21,7 +21,12 @@ function gameOver() {
     let modalBody = document.getElementById("modal-body");
     let span = document.getElementsByClassName("close")[0];
 
-    console.log(modalBody.children)
+    let formuleSpans = document.querySelectorAll("span.formuleSpan");
+
+    formuleSpans.forEach(e => {
+        e.onclick = "";
+        e.classList.replace("formuleSpan", "notSelected");
+    })
 
     if (modalBody.children.length > 0) {
         modalBody.querySelectorAll('*').forEach(n => n.remove());
@@ -31,13 +36,13 @@ function gameOver() {
     h2.innerHTML = "Score : " + scoreObj.score;
     h2.style.paddingBottom = "10px";
     let p1 = document.createElement("p");
-    p1.innerHTML = " - Nombres de coups joués : " + scoreObj.nbCoupsJoues;
+    p1.innerHTML = " - Nombres de coups joués : <b>" + scoreObj.nbCoupsJoues + "</b>";
     let p2 = document.createElement("p");
-    p2.innerHTML = " - Nombres de coups joués sur des branches pouvant être fermées : " + scoreObj.nbCoupsBranchesFermables;
+    p2.innerHTML = " - Nombres de coups joués sur des branches pouvant être fermées : <b>" + scoreObj.nbCoupsBranchesFermables + "</b>";
     let p3 = document.createElement("p");
-    p3.innerHTML = " - Nombres de tentatives de fermeture de noeuds sans contradiction : " + scoreObj.nbBranchesFermeesIncorrectement;
+    p3.innerHTML = " - Nombres de tentatives de fermeture de noeuds sans contradiction : <b>" + scoreObj.nbBranchesFermeesIncorrectement + "</b>";
     let p4 = document.createElement("p");
-    p4.innerHTML = " - Nombres de branches fermées correctement : " + scoreObj.nbBrancheFermeeCorrectement;
+    p4.innerHTML = " - Nombres de branches fermées correctement : <b>" + scoreObj.nbBrancheFermeeCorrectement + "</b>";
     modalBody.appendChild(h2);
     modalBody.appendChild(p1);
     modalBody.appendChild(p2);
@@ -103,7 +108,7 @@ function reset() {
         }
     };
 
-    document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 100%;'> </div>";
+    document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 60%;'> </div>";
     my_chart = new Treant(simple_chart_config);
     next(document.getElementById("root"));
 
@@ -191,7 +196,7 @@ function enterFormula() {
         }
     };
 
-    document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 100%;'> </div>";
+    document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 60%;'> </div>";
     my_chart = new Treant(simple_chart_config);
     next(document.getElementById("root"));
 }
@@ -315,6 +320,8 @@ function next(e) {
 
     console.log("nbNodesClosed", nbNodesClosed)
     console.log("nbNodesClosedByUser", nbNodesClosedByUser);
+    console.log("nbExisteNoeudDeveloppable", nbExisteNoeudDeveloppable)
+
 }
 
 function confirmClose(node) {
@@ -324,9 +331,11 @@ function confirmClose(node) {
         if((newNode = new NodeLogic(allFormulas)).isClosed()) {
             node.querySelectorAll("span").forEach(formule => {
                 formule.onclick = "";
-                formule.classList.remove("formuleSpan");
-                formule.classList.add("notSelected");
+                formule.classList.replace("formuleSpan", "notSelected");
             });
+            if(!new NodeLogic(allFormulas).hasOnlyLiterrals()) {
+                nbExisteNoeudDeveloppable--;
+            }
             nbNodesClosedByUser++;
             alert("La branche a été fermée")
             scoreObj.fermerBrancheCorrectement()

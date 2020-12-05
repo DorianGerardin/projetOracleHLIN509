@@ -5,6 +5,7 @@ class Score {
         this.nbBranchesFermeesIncorrectement = 0;
         this.nbCoupsBranchesFermables = 0;
         this.nbCoupsJoues = 0;
+        this.nbCoupsSurLitteral = 0;
 
         this.nbCoupsIdeal = 0;
         for (let i = 0; i < strFormule.length; i++) {
@@ -13,6 +14,11 @@ class Score {
             }
         }
         this.score = 0;
+    }
+
+    jouerCoupSurLitteral() {
+        this.nbCoupsSurLitteral++;
+        this.getScore();
     }
 
     fermerBrancheCorrectement() {
@@ -43,6 +49,8 @@ class Score {
         (this.nbCoupsBranchesFermables*-25)
         +
         (Math.max(this.nbCoupsJoues-this.nbCoupsIdeal, 0)*-5))
+        +
+        (this.nbCoupsSurLitteral*-75)
         // *
         // (this.nbCoupsIdeal-tempsEnMinute)
     }
