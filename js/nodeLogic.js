@@ -28,4 +28,14 @@ class NodeLogic {
         return false;
     }
 
+    hasOnlyLiterrals() {
+        let bool = true;
+        this.listeFormules.forEach(formule => {
+            if (!formule.isSymboleLogique) {
+                bool = false;
+            }
+        });
+        return bool;
+    }
+
 }

@@ -3,7 +3,7 @@ var my_chart = null;
 var simple_chart_config = null;
 
 let inputFirstTime = document.getElementById("formuleInput");
-inputFirstTime.value = "¬(p→((p→q)→q))";
+inputFirstTime.value = "(a∧a)∨(b∧¬b)∨(b→a)";
 
 var scoreObj = null;
 var scoreDisplay = document.getElementById("score");
@@ -12,6 +12,9 @@ scoreDisplay.childNodes[1].innerHTML = "Score : " + score;
 
 var nbNodesClosed = 0;
 var nbNodesClosedByUser = 0;
+
+var existeNoeudDeveloppable = false;
+var nbExisteNoeudDeveloppable = 0;
 
 function gameOver() {
     let modal = document.getElementById("myModal");
@@ -63,6 +66,8 @@ function fillInput(str) {
 
 function reset() {
 
+    nbExisteNoeudDeveloppable = 1;
+
     nbNodesClosedByUser = 0;
     nbNodesClosed = 0;
 
@@ -106,6 +111,8 @@ function reset() {
 
 function changeFormula() {
 
+    nbExisteNoeudDeveloppable = 1;
+
     var modal = document.getElementById("myModal");
     modal.style.display = "none";
 
@@ -139,6 +146,10 @@ function enterFormula() {
     let form = document.getElementById("form");
     form.style.display = "none";
     root = input.value;
+
+    if (new Formule(root).isSymboleLogique) {
+        nbExisteNoeudDeveloppable = 0;
+    } else nbExisteNoeudDeveloppable = 1;
 
     scoreObj = new Score(root);
     scoreDisplay.style.display = "flex";
@@ -216,6 +227,7 @@ function next(e) {
     allFormulas.forEach(e => e.classList.remove("formuleSpan"))
 
     allFormulas = Array.from(allFormulas).map(e => e.innerHTML)
+
     if(new NodeLogic(allFormulas).isClosed()) {
         scoreObj.jouerQuandBrancheFermable();
         nbNodesClosed--;
@@ -259,6 +271,10 @@ function next(e) {
         if(new NodeLogic(listFormulas).isClosed()) {
             nbNodesClosed++;
         }
+        if(!new NodeLogic(listFormulas).hasOnlyLiterrals()) {
+            nbExisteNoeudDeveloppable++;
+        }
+        console.log(existeNoeudDeveloppable)
         let childNode = getNodeStructure(idParent+"0", listFormulas)
         let newNode = my_chart.tree.addNode(parentNode, childNode);
         contextMenu(newNode.nodeDOM);
@@ -268,17 +284,35 @@ function next(e) {
         if(new NodeLogic(listFormulas1).isClosed()) {
             nbNodesClosed++;
         }
-
+        if(!new NodeLogic(listFormulas1).hasOnlyLiterrals()) {
+            nbExisteNoeudDeveloppable++;
+        }
+        console.log(existeNoeudDeveloppable)
         let listFormulas2 = listFormulasBefore.concat([nextNodes[1][1].expression]).concat(listFormulasAfter)
         if(new NodeLogic(listFormulas2).isClosed()) {
             nbNodesClosed++;
         }
+        if(!new NodeLogic(listFormulas2).hasOnlyLiterrals()) {
+            nbExisteNoeudDeveloppable++;
+        }
+        console.log(existeNoeudDeveloppable)
         let childNode2 = getNodeStructure(idParent+"1", listFormulas2)
         let newNode = my_chart.tree.addNode(parentNode, childNode1)
         let newNode2 = my_chart.tree.addNode(parentNode, childNode2)
         contextMenu(newNode.nodeDOM);
         contextMenu(newNode2.nodeDOM);
     }
+
+    if(!new NodeLogic(allFormulas).hasOnlyLiterrals()) {
+        nbExisteNoeudDeveloppable--;
+    }
+
+    console.log(nbExisteNoeudDeveloppable)
+
+    if (nbNodesClosed === nbNodesClosedByUser && nbExisteNoeudDeveloppable === 0) {
+        gameOver();
+    }
+
     console.log("nbNodesClosed", nbNodesClosed)
     console.log("nbNodesClosedByUser", nbNodesClosedByUser);
 }
@@ -300,7 +334,7 @@ function confirmClose(node) {
             node.style.border = "2px solid green";
             node.style.borderRadius = "15px";
             node.removeEventListener('contextmenu', handleContextMenu)
-            if (nbNodesClosed === nbNodesClosedByUser) {
+            if (nbNodesClosed === nbNodesClosedByUser && nbExisteNoeudDeveloppable === 0) {
                 console.log("game over");
                 gameOver();
             }
