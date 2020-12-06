@@ -16,7 +16,53 @@ var nbNodesClosedByUser = 0;
 var existeNoeudDeveloppable = false;
 var nbExisteNoeudDeveloppable = 0;
 
+var timer = 0;
+var running = false;
+var intervalTime = null
+
+function startTimer() {
+    running = true;
+    intervalTime = setInterval(myTimer, 100);
+}
+
+function myTimer() {
+    if (running) {
+        timer++;
+        let mins = Math.floor(timer/10/60);
+        let secs = Math.floor(timer/10%60);
+        if(mins < 10) {
+            mins = "0" + mins
+        }
+        if(secs < 10) {
+            secs = "0" + secs
+        }
+        document.getElementById("timer").innerHTML = mins + " : " + secs;
+    }
+}
+
+function stopTimer() {
+    running = false;
+    clearInterval(intervalTime);
+}
+
+function resetTimer() {
+    timer = 0;
+    clearInterval(intervalTime);
+    document.getElementById("timer").innerHTML = "00 : 00";
+}
+
+function incrementTimer() {
+    intervalTime = setInterval(() => {
+        if (running) {
+            
+        }
+    }, 100)
+}
+
 function gameOver() {
+
+    stopTimer();
+
     let modal = document.getElementById("myModal");
     let modalBody = document.getElementById("modal-body");
     let span = document.getElementsByClassName("close")[0];
@@ -35,15 +81,27 @@ function gameOver() {
     let h2 = document.createElement("h2");
     h2.innerHTML = "Score : " + scoreObj.score;
     h2.style.paddingBottom = "10px";
+
+    let h2Bis = document.createElement("h2");
+    let tempsMis = document.getElementById("timer").innerHTML.split(":");
+    let tempsMins = tempsMis[0] > 1 ? tempsMis[0] + " minutes et " : tempsMis[0] === 1 ? " minute et " : "";
+    let tempsSecs = tempsMis[1] > 1 ? tempsMis[1] + " secondes " : tempsMis[1] + " seconde ";
+    h2Bis.innerHTML = "Temps mis : " + tempsMins + tempsSecs;
+    h2Bis.style.paddingBottom = "10px";
+
     let p1 = document.createElement("p");
     p1.innerHTML = " - Nombres de coups joués : <b>" + scoreObj.nbCoupsJoues + "</b>";
+
     let p2 = document.createElement("p");
     p2.innerHTML = " - Nombres de coups joués sur des branches pouvant être fermées : <b>" + scoreObj.nbCoupsBranchesFermables + "</b>";
+
     let p3 = document.createElement("p");
     p3.innerHTML = " - Nombres de tentatives de fermeture de noeuds sans contradiction : <b>" + scoreObj.nbBranchesFermeesIncorrectement + "</b>";
+   
     let p4 = document.createElement("p");
     p4.innerHTML = " - Nombres de branches fermées correctement : <b>" + scoreObj.nbBrancheFermeeCorrectement + "</b>";
     modalBody.appendChild(h2);
+    modalBody.appendChild(h2Bis);
     modalBody.appendChild(p1);
     modalBody.appendChild(p2);
     modalBody.appendChild(p3);
@@ -70,6 +128,9 @@ function fillInput(str) {
 }
 
 function reset() {
+
+    resetTimer();
+    startTimer();
 
     nbExisteNoeudDeveloppable = 1;
 
@@ -116,6 +177,10 @@ function reset() {
 
 function changeFormula() {
 
+    document.getElementById("timerParent").style.display = "none";
+
+    resetTimer();
+
     nbExisteNoeudDeveloppable = 1;
 
     var modal = document.getElementById("myModal");
@@ -145,6 +210,10 @@ function changeFormula() {
 }
 
 function enterFormula() {
+
+    document.getElementById("timerParent").style.display = "flex";
+
+    startTimer();
 
     let input = document.getElementById("formuleInput");
     console.log(input.value);
@@ -236,6 +305,10 @@ function next(e) {
     if(new NodeLogic(allFormulas).isClosed()) {
         scoreObj.jouerQuandBrancheFermable();
         nbNodesClosed--;
+        updateScore();
+    }
+    if (new Formule(e.innerHTML).isSymboleLogique) {
+        scoreObj.jouerCoupSurLitteral();
         updateScore();
     }
     //Désactive l'action
