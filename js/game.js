@@ -163,7 +163,7 @@ function reset() {
         },
         
         nodeStructure: {
-            innerHTML : "<span id='root' class='formulaSpan'>" + root + "</span>",
+            innerHTML : "<span id='root' class='formuleSpan' onclick='next(this)'>" + root + "</span>",
             HTMLid : "0",
             collapsable : false,
         }
@@ -171,7 +171,7 @@ function reset() {
 
     document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 60%;'> </div>";
     my_chart = new Treant(simple_chart_config);
-    next(document.getElementById("root"));
+    //next(document.getElementById("root"));
 
 }
 
@@ -259,7 +259,7 @@ function enterFormula() {
         },
         
         nodeStructure: {
-            innerHTML : "<span id='root' class='formulaSpan'>" + root + "</span>",
+            innerHTML : "<span id='root' class='formuleSpan' onclick='next(this)'>" + root + "</span>",
             HTMLid : "0",
             collapsable : false,
         }
@@ -267,7 +267,7 @@ function enterFormula() {
 
     document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 60%;'> </div>";
     my_chart = new Treant(simple_chart_config);
-    next(document.getElementById("root"));
+    //next(document.getElementById("root"));
 }
 
 
