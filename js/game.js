@@ -83,18 +83,23 @@ function gameOver() {
 
     let p1 = document.createElement("p");
     p1.innerHTML = " - Nombres de coups joués : <b>" + scoreObj.nbCoupsJoues + "</b>" + " (" + scoreObj.getPtsJouerCoup() + ")";
+    p1.style.padding = "2px"
 
     let p2 = document.createElement("p");
     p2.innerHTML = " - Nombres de coups joués sur des branches contenant au moins une contradiction : <b>" + scoreObj.nbCoupsBranchesFermables + "</b>" + " (" + scoreObj.getPtsJouerQuandBrancheFermable() + ")";
+    p2.style.padding = "2px"
 
     let p3 = document.createElement("p");
     p3.innerHTML = " - Nombres de tentatives de fermeture sur des branches sans contradictions : <b>" + scoreObj.nbBranchesFermeesIncorrectement + "</b>" + " (" + scoreObj.getPtsFermerBrancheIncorrectement() + ")";
-   
-    let p5 = document.createElement("p");
-    p5.innerHTML = " - Nombres de coups joués sur des branches contenant uniquement des littéraux : <b>" + scoreObj.nbCoupsSurLitteral + "</b>" + " (" + scoreObj.getPtsCoupSurLitteral() + ")";
+    p3.style.padding = "2px"
 
     let p4 = document.createElement("p");
-    p4.innerHTML = " - Nombres de contradictions trouvées : <b>" + scoreObj.nbBranchesFermeesCorrectement + "</b>" + " (" + scoreObj.getPtsFermerBrancheCorrectement() + ")";
+    p4.innerHTML = " - Nombres de coups joués sur des branches contenant uniquement des littéraux : <b>" + scoreObj.nbCoupsSurLitteral + "</b>" + " (" + scoreObj.getPtsCoupSurLitteral() + ")";
+    p4.style.padding = "2px"
+
+    let p5 = document.createElement("p");
+    p5.innerHTML = " - Nombres de contradictions trouvées : <b>" + scoreObj.nbBranchesFermeesCorrectement + "</b>" + " (" + scoreObj.getPtsFermerBrancheCorrectement() + ")";
+    p5.style.padding = "2px";
 
     modalBody.appendChild(h2);
     modalBody.appendChild(h3);
