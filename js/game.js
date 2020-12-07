@@ -213,67 +213,71 @@ function normalizeFormula(formule) {
 
 
 function enterFormula() {
-
-    document.getElementById("timerParent").style.display = "flex";
-
     let input = document.getElementById("formuleInput");
-    console.log(input.value);
-    let form = document.getElementById("form");
-    form.style.display = "none";
+
     if((input.value.match(/\(/g) || []).length !== (input.value.match(/\)/g) || []).length) {
         alert("Nombre de parenthèses incorrect")
-    }
-    root = normalizeFormula(input.value);
+        return false;
+    } else {
 
-    startTimer();
+        document.getElementById("timerParent").style.display = "flex";
 
-    if (new Formule(root).isSymboleLogique) {
-        nbExisteNoeudDeveloppable = 0;
-    } else nbExisteNoeudDeveloppable = 1;
+        console.log(input.value);
+        let form = document.getElementById("form");
+        form.style.display = "none";
+        root = normalizeFormula(input.value);
 
-    scoreObj = new Score(root);
-    scoreDisplay.style.display = "flex";
-    updateScore()
+        startTimer();
 
-    let tips = document.getElementById("tips");
-    tips.style.display = "flex";
+        if (new Formule(root).isSymboleLogique) {
+            nbExisteNoeudDeveloppable = 0;
+        } else nbExisteNoeudDeveloppable = 1;
 
-    let signature = document.getElementById("signature");
-    signature.style.position = "absolute";
-    signature.style.bottom = "20px";
-    signature.style.left = "20px";
+        scoreObj = new Score(root);
+        scoreDisplay.style.display = "flex";
+        updateScore()
 
-    let gameButtons = document.getElementById("gameButtons");
-    gameButtons.style.display = "flex";
-    gameButtons.style.flexDirection = "column";
+        let tips = document.getElementById("tips");
+        tips.style.display = "flex";
 
-    simple_chart_config = {
-        chart: {
-            container: "#tree-simple",
-            connectors: {
-                type : "straight"
+        let signature = document.getElementById("signature");
+        signature.style.position = "absolute";
+        signature.style.bottom = "20px";
+        signature.style.left = "20px";
+
+        let gameButtons = document.getElementById("gameButtons");
+        gameButtons.style.display = "flex";
+        gameButtons.style.flexDirection = "column";
+
+        simple_chart_config = {
+            chart: {
+                container: "#tree-simple",
+                connectors: {
+                    type : "straight"
+                },
+                scrollbar: "fancy",
+                animation: {
+                    connectorsAnimation : "linear",
+                    nodeAnimation : "linear",
+                },
+                node : {
+                    collapsable: false,
+                    HTMLclass : "nodeFormule"
+                }
             },
-            scrollbar: "fancy",
-            animation: {
-                connectorsAnimation : "linear",
-                nodeAnimation : "linear",
-            },
-            node : {
-                collapsable: false,
-                HTMLclass : "nodeFormule"
+
+            nodeStructure: {
+                innerHTML : "<span id='root' class='formuleSpan' onclick='next(this)'>" + root + "</span>",
+                HTMLid : "0",
+                collapsable : false,
             }
-        },
-        
-        nodeStructure: {
-            innerHTML : "<span id='root' class='formuleSpan' onclick='next(this)'>" + root + "</span>",
-            HTMLid : "0",
-            collapsable : false,
-        }
-    };
+        };
 
-    document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 60%;'> </div>";
-    my_chart = new Treant(simple_chart_config);
-    //next(document.getElementById("root"));
+        document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 60%;'> </div>";
+        my_chart = new Treant(simple_chart_config);
+        //next(document.getElementById("root"));
+    }
+
 }
 
 
