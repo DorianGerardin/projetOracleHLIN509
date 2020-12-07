@@ -24,8 +24,6 @@ class Formule {
     isNegationOf(symbole) {
         if (this.expression.length <= 2) {
             return (this.expression === "¬" + symbole.expression || "¬" + this.expression === symbole.expression);
-        } else {
-            console.log("Impossible d'appeler cette méthode sur autre chose qu'un litteral ou sa négation");
         }
     }
 
@@ -91,9 +89,6 @@ class Formule {
         } else if ((posOperator = arrForm.lastIndexOf("∧")) > -1) {
             return ["∧", posOperator, [Formule.getFormulaFromList(arrForm.slice(0, posOperator), false), Formule.getFormulaFromList(arrForm.slice(posOperator + 1), false)]];
         } else if (arrForm[0] === "¬" && arrForm[1] === "¬") { //Double négation
-            console.log("HERE")
-            console.log(arrForm)
-            console.log(arrForm.slice(2))
             return ["¬¬", 0, [Formule.getFormulaFromList(arrForm.slice(2), false)]];
         } else if (arrForm[0] === "¬" && arrForm.length === 2) { //Cas d'une négation
             let formuleSansInverse = new Formule(arrForm[1])
@@ -128,13 +123,11 @@ class Formule {
     static getFormulaFromList(listeFormule, negation) {
         if(negation) {
             if(listeFormule.join("")[0]!=="(" && listeFormule.join("").length>2) {
-                console.log("ME")
                 return new Formule("¬(" + listeFormule.join("") + ")")
             } else {
                 return new Formule("¬" + listeFormule.join(""))
             }
         } else if(listeFormule.length===1 && !(new Formule(listeFormule[0])).isSymboleLogique) {
-            console.log((new Formule(listeFormule[0])).isSymboleLogique)
             return new Formule(listeFormule[0].slice(1, -1))
         } else {
             return new Formule(listeFormule.join(""))
@@ -161,7 +154,6 @@ class Formule {
                 return [2, nextOperation[2]];
             case "ERROR":
             default:
-                console.log("Something went wrong")
                 break;
         }
     }

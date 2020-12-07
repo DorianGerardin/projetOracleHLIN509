@@ -76,11 +76,6 @@ class Score {
     }
 
     getScore() {
-        console.log("getpts litteral "+this.getPtsCoupSurLitteral());
-        console.log("getpts branche inc "+this.getPtsFermerBrancheIncorrectement());
-        console.log("getpts branche c "+this.getPtsFermerBrancheCorrectement());
-        console.log("getpts jouer coups "+this.getPtsJouerCoup());
-        console.log("getpts jouer branche fer "+this.getPtsJouerQuandBrancheFermable());
         this.score = this.getPtsCoupSurLitteral()
         +
         this.getPtsFermerBrancheCorrectement()
@@ -90,7 +85,6 @@ class Score {
         this.getPtsJouerCoup()
         +
         this.getPtsJouerQuandBrancheFermable()
-        console.log("score getScore " + this.score)
     }
 
 }

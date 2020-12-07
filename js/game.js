@@ -3,7 +3,7 @@ var my_chart = null;
 var simple_chart_config = null;
 
 let inputFirstTime = document.getElementById("formuleInput");
-inputFirstTime.value = "(a∧a)∨(b∧¬b)∨(b→a)";
+inputFirstTime.value = "((p→(q→r))→((q→r)∨(q→r)))→((¬(¬q→¬p))∨¬q∨q)";
 
 var scoreObj = null;
 var scoreDisplay = document.getElementById("score");
@@ -76,7 +76,7 @@ function gameOver() {
 
     let h3 = document.createElement("h3");
     let tempsMis = document.getElementById("timer").innerHTML.split(":");
-    let tempsMins = tempsMis[0] > 1 ? tempsMis[0] + " minutes et " : tempsMis[0] === 1 ? " minute et " : "";
+    let tempsMins = tempsMis[0] > 1 ? tempsMis[0] + " minutes et " : tempsMis[0] == 1 ? tempsMis[0] + " minute et " : "";
     let tempsSecs = tempsMis[1] > 1 ? tempsMis[1] + " secondes " : tempsMis[1] + " seconde ";
     h3.innerHTML = "Temps mis : " + tempsMins + tempsSecs;
     h3.style.paddingBottom = "10px";
@@ -118,7 +118,6 @@ function gameOver() {
 function updateScore() {
     scoreDisplay = document.getElementById("score");
     score = scoreObj.score;
-    console.log("score" + score)
     scoreDisplay.childNodes[1].innerHTML = "Score : " + score;
 }
 
@@ -228,7 +227,6 @@ function enterFormula() {
 
     document.getElementById("timerParent").style.display = "flex";
 
-    console.log(input.value);
     let form = document.getElementById("form");
     form.style.display = "none";
     root = normalizeFormula(input.value);
@@ -368,7 +366,6 @@ function next(e) {
         if(!new NodeLogic(listFormulas).hasOnlyLiterrals()) {
             nbExisteNoeudDeveloppable++;
         }
-        console.log(existeNoeudDeveloppable)
         let childNode = getNodeStructure(idParent+"0", listFormulas)
         let newNode = my_chart.tree.addNode(parentNode, childNode);
         contextMenu(newNode.nodeDOM);
@@ -381,7 +378,6 @@ function next(e) {
         if(!new NodeLogic(listFormulas1).hasOnlyLiterrals()) {
             nbExisteNoeudDeveloppable++;
         }
-        console.log(existeNoeudDeveloppable)
         let listFormulas2 = listFormulasBefore.concat([nextNodes[1][1].expression]).concat(listFormulasAfter)
         if(new NodeLogic(listFormulas2).isClosed()) {
             nbNodesClosed++;
@@ -389,7 +385,6 @@ function next(e) {
         if(!new NodeLogic(listFormulas2).hasOnlyLiterrals()) {
             nbExisteNoeudDeveloppable++;
         }
-        console.log(existeNoeudDeveloppable)
         let childNode2 = getNodeStructure(idParent+"1", listFormulas2)
         let newNode = my_chart.tree.addNode(parentNode, childNode1)
         let newNode2 = my_chart.tree.addNode(parentNode, childNode2)
@@ -401,16 +396,9 @@ function next(e) {
         nbExisteNoeudDeveloppable--;
     }
 
-    console.log(nbExisteNoeudDeveloppable)
-
     if (nbNodesClosed === nbNodesClosedByUser && nbExisteNoeudDeveloppable === 0) {
         gameOver();
     }
-
-    console.log("nbNodesClosed", nbNodesClosed)
-    console.log("nbNodesClosedByUser", nbNodesClosedByUser);
-    console.log("nbExisteNoeudDeveloppable", nbExisteNoeudDeveloppable)
-
 }
 
 function confirmClose(node) {
@@ -433,7 +421,6 @@ function confirmClose(node) {
             node.style.borderRadius = "15px";
             node.removeEventListener('contextmenu', handleContextMenu)
             if (nbNodesClosed === nbNodesClosedByUser && nbExisteNoeudDeveloppable === 0) {
-                console.log("game over");
                 gameOver();
             }
         } else {
@@ -442,8 +429,6 @@ function confirmClose(node) {
             updateScore();
         }
     }
-    console.log("nbNodesClosed", nbNodesClosed)
-    console.log("nbNodesClosedByUser", nbNodesClosedByUser);
 }
 
 
@@ -452,7 +437,6 @@ function contextMenu(node) {
 }
 
 function handleContextMenu(event) {
-    console.log("handle", event);
     event.preventDefault();
     confirmClose(this);
 }
