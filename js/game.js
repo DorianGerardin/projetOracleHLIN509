@@ -125,7 +125,8 @@ function updateScore() {
 function fillInput(str) {
     let input = document.getElementById("formuleInput");
     let cursorPosition = input.selectionStart;
-    input.value = input.value.substring(0, cursorPosition) + str + input.value.substring(cursorPosition);
+    let end = input.selectionEnd;
+    input.value = input.value.substring(0, cursorPosition) + str + input.value.substring(end);
     input.focus();
     input.setSelectionRange(cursorPosition + 1, cursorPosition + 1)
 }
@@ -222,66 +223,66 @@ function enterFormula() {
 
     if((input.value.match(/\(/g) || []).length !== (input.value.match(/\)/g) || []).length) {
         alert("Nombre de parenthèses incorrect")
-        return false;
-    } else {
-
-        document.getElementById("timerParent").style.display = "flex";
-
-        console.log(input.value);
-        let form = document.getElementById("form");
-        form.style.display = "none";
-        root = normalizeFormula(input.value);
-
-        startTimer();
-
-        if (new Formule(root).isSymboleLogique) {
-            nbExisteNoeudDeveloppable = 0;
-        } else nbExisteNoeudDeveloppable = 1;
-
-        scoreObj = new Score(root);
-        scoreDisplay.style.display = "flex";
-        updateScore()
-
-        let tips = document.getElementById("tips");
-        tips.style.display = "flex";
-
-        let signature = document.getElementById("signature");
-        signature.style.position = "absolute";
-        signature.style.bottom = "20px";
-        signature.style.left = "20px";
-
-        let gameButtons = document.getElementById("gameButtons");
-        gameButtons.style.display = "flex";
-        gameButtons.style.flexDirection = "column";
-
-        simple_chart_config = {
-            chart: {
-                container: "#tree-simple",
-                connectors: {
-                    type : "straight"
-                },
-                scrollbar: "fancy",
-                animation: {
-                    connectorsAnimation : "linear",
-                    nodeAnimation : "linear",
-                },
-                node : {
-                    collapsable: false,
-                    HTMLclass : "nodeFormule"
-                }
-            },
-
-            nodeStructure: {
-                innerHTML : "<span id='root' class='formuleSpan' onclick='next(this)'>" + root + "</span>",
-                HTMLid : "0",
-                collapsable : false,
-            }
-        };
-
-        document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 60%;'> </div>";
-        my_chart = new Treant(simple_chart_config);
-        //next(document.getElementById("root"));
+        return
     }
+
+    document.getElementById("timerParent").style.display = "flex";
+
+    console.log(input.value);
+    let form = document.getElementById("form");
+    form.style.display = "none";
+    root = normalizeFormula(input.value);
+
+    startTimer();
+
+    if (new Formule(root).isSymboleLogique) {
+        nbExisteNoeudDeveloppable = 0;
+    } else nbExisteNoeudDeveloppable = 1;
+
+    scoreObj = new Score(root);
+    scoreDisplay.style.display = "flex";
+    updateScore()
+
+    let tips = document.getElementById("tips");
+    tips.style.display = "flex";
+
+    let signature = document.getElementById("signature");
+    signature.style.position = "absolute";
+    signature.style.bottom = "20px";
+    signature.style.left = "20px";
+
+    let gameButtons = document.getElementById("gameButtons");
+    gameButtons.style.display = "flex";
+    gameButtons.style.flexDirection = "column";
+
+    simple_chart_config = {
+        chart: {
+            container: "#tree-simple",
+            connectors: {
+                type : "straight"
+            },
+            scrollbar: "fancy",
+            animation: {
+                connectorsAnimation : "linear",
+                nodeAnimation : "linear",
+            },
+            node : {
+                collapsable: false,
+                HTMLclass : "nodeFormule"
+            }
+        },
+
+        nodeStructure: {
+            innerHTML : "<span id='root' class='formuleSpan' onclick='next(this)'>" + root + "</span>",
+            HTMLid : "0",
+            collapsable : false,
+        }
+    };
+
+    document.body.innerHTML += "<div id='tree-simple' style='width:100%; height: 60%;'> </div>";
+    my_chart = new Treant(simple_chart_config);
+    //next(document.getElementById("root"));
+    
 
 }
 
