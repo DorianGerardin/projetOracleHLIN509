@@ -42,7 +42,7 @@ class Score {
     }
 
     getScore() {
-        this.score = ((this.nbBrancheFermeeCorrectement*150)
+        this.score = ((this.nbBrancheFermeeCorrectement*75)
         +
         (this.nbBranchesFermeesIncorrectement*-75)
         +
