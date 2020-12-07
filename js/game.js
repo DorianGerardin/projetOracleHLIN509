@@ -74,30 +74,35 @@ function gameOver() {
     h2.innerHTML = "Score : " + scoreObj.score;
     h2.style.paddingBottom = "10px";
 
-    let h2Bis = document.createElement("h2");
+    let h3 = document.createElement("h3");
     let tempsMis = document.getElementById("timer").innerHTML.split(":");
     let tempsMins = tempsMis[0] > 1 ? tempsMis[0] + " minutes et " : tempsMis[0] === 1 ? " minute et " : "";
     let tempsSecs = tempsMis[1] > 1 ? tempsMis[1] + " secondes " : tempsMis[1] + " seconde ";
-    h2Bis.innerHTML = "Temps mis : " + tempsMins + tempsSecs;
-    h2Bis.style.paddingBottom = "10px";
+    h3.innerHTML = "Temps mis : " + tempsMins + tempsSecs;
+    h3.style.paddingBottom = "10px";
 
     let p1 = document.createElement("p");
-    p1.innerHTML = " - Nombres de coups joués : <b>" + scoreObj.nbCoupsJoues + "</b>";
+    p1.innerHTML = " - Nombres de coups joués : <b>" + scoreObj.nbCoupsJoues + "</b>" + " (" + scoreObj.getPtsJouerCoup() + ")";
 
     let p2 = document.createElement("p");
-    p2.innerHTML = " - Nombres de coups joués sur des branches pouvant être fermées : <b>" + scoreObj.nbCoupsBranchesFermables + "</b>";
+    p2.innerHTML = " - Nombres de coups joués sur des branches contenant au moins une contradiction : <b>" + scoreObj.nbCoupsBranchesFermables + "</b>" + " (" + scoreObj.getPtsJouerQuandBrancheFermable() + ")";
 
     let p3 = document.createElement("p");
-    p3.innerHTML = " - Nombres de tentatives de fermeture de noeuds sans contradiction : <b>" + scoreObj.nbBranchesFermeesIncorrectement + "</b>";
+    p3.innerHTML = " - Nombres de tentatives de fermeture sur des branches sans contradictions : <b>" + scoreObj.nbBranchesFermeesIncorrectement + "</b>" + " (" + scoreObj.getPtsFermerBrancheIncorrectement() + ")";
    
+    let p5 = document.createElement("p");
+    p5.innerHTML = " - Nombres de coups joués sur des branches contenant uniquement des littéraux : <b>" + scoreObj.nbCoupsSurLitteral + "</b>" + " (" + scoreObj.getPtsCoupSurLitteral() + ")";
+
     let p4 = document.createElement("p");
-    p4.innerHTML = " - Nombres de branches fermées correctement : <b>" + scoreObj.nbBrancheFermeeCorrectement + "</b>";
+    p4.innerHTML = " - Nombres de contradictions trouvées : <b>" + scoreObj.nbBranchesFermeesCorrectement + "</b>" + " (" + scoreObj.getPtsFermerBrancheCorrectement() + ")";
+
     modalBody.appendChild(h2);
-    modalBody.appendChild(h2Bis);
+    modalBody.appendChild(h3);
     modalBody.appendChild(p1);
     modalBody.appendChild(p2);
     modalBody.appendChild(p3);
     modalBody.appendChild(p4);
+    modalBody.appendChild(p5);
 
     modal.style.display = "block";
     span.onclick = function() {
@@ -108,6 +113,7 @@ function gameOver() {
 function updateScore() {
     scoreDisplay = document.getElementById("score");
     score = scoreObj.score;
+    console.log("score" + score)
     scoreDisplay.childNodes[1].innerHTML = "Score : " + score;
 }
 
@@ -201,17 +207,25 @@ function changeFormula() {
     
 }
 
+function normalizeFormula(formule) {
+    return formule.replace(/\s+/g, '');
+}
+
+
 function enterFormula() {
 
     document.getElementById("timerParent").style.display = "flex";
-
-    startTimer();
 
     let input = document.getElementById("formuleInput");
     console.log(input.value);
     let form = document.getElementById("form");
     form.style.display = "none";
-    root = input.value;
+    if((input.value.match(/\(/g) || []).length !== (input.value.match(/\)/g) || []).length) {
+        alert("Nombre de parenthèses incorrect")
+    }
+    root = normalizeFormula(input.value);
+
+    startTimer();
 
     if (new Formule(root).isSymboleLogique) {
         nbExisteNoeudDeveloppable = 0;

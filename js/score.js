@@ -1,7 +1,13 @@
 class Score {
 
+    static tauxCoupSurLitteral = -75;
+    static tauxFermerBrancheCorrectement = 75;
+    static tauxFermerBrancheIncorrectement = -75;
+    static tauxJouerCoup = -5;
+    static tauxJouerQuandBrancheFermable = -25;
+
     constructor(strFormule) {
-        this.nbBrancheFermeeCorrectement = 0;
+        this.nbBranchesFermeesCorrectement = 0;
         this.nbBranchesFermeesIncorrectement = 0;
         this.nbCoupsBranchesFermables = 0;
         this.nbCoupsJoues = 0;
@@ -21,38 +27,70 @@ class Score {
         this.getScore();
     }
 
+    getPtsCoupSurLitteral() {
+        return this.nbCoupsSurLitteral*Score.tauxCoupSurLitteral;
+    }
+
+
+
     fermerBrancheCorrectement() {
-        this.nbBrancheFermeeCorrectement++;
+        this.nbBranchesFermeesCorrectement++;
         this.getScore();
     }
+
+    getPtsFermerBrancheCorrectement() {
+        return this.nbBranchesFermeesCorrectement*Score.tauxFermerBrancheCorrectement
+    }
+
+
 
     fermerBrancheIncorrectement() {
         this.nbBranchesFermeesIncorrectement++;
         this.getScore();
     }
 
+    getPtsFermerBrancheIncorrectement() {
+        return this.nbBranchesFermeesIncorrectement*Score.tauxFermerBrancheIncorrectement
+    }
+
+
+
     jouerCoup() {
         this.nbCoupsJoues++;
         this.getScore();
     }
+
+    getPtsJouerCoup() {
+        return Math.max(this.nbCoupsJoues-this.nbCoupsIdeal, 0)*Score.tauxJouerCoup;
+    }
+
+
 
     jouerQuandBrancheFermable() {
         this.nbCoupsBranchesFermables++;
         this.getScore();
     }
 
+    getPtsJouerQuandBrancheFermable() {
+       return this.nbCoupsBranchesFermables*Score.tauxJouerQuandBrancheFermable;
+    }
+
     getScore() {
-        this.score = ((this.nbBrancheFermeeCorrectement*75)
+        console.log("getpts litteral "+this.getPtsCoupSurLitteral());
+        console.log("getpts branche inc "+this.getPtsFermerBrancheIncorrectement());
+        console.log("getpts branche c "+this.getPtsFermerBrancheCorrectement());
+        console.log("getpts jouer coups "+this.getPtsJouerCoup());
+        console.log("getpts jouer branche fer "+this.getPtsJouerQuandBrancheFermable());
+        this.score = this.getPtsCoupSurLitteral()
         +
-        (this.nbBranchesFermeesIncorrectement*-75)
+        this.getPtsFermerBrancheCorrectement()
         +
-        (this.nbCoupsBranchesFermables*-25)
+        this.getPtsFermerBrancheIncorrectement()
         +
-        (Math.max(this.nbCoupsJoues-this.nbCoupsIdeal, 0)*-5))
+        this.getPtsJouerCoup()
         +
-        (this.nbCoupsSurLitteral*-75)
-        // *
-        // (this.nbCoupsIdeal-tempsEnMinute)
+        this.getPtsJouerQuandBrancheFermable()
+        console.log("score getScore " + this.score)
     }
 
 }
