@@ -51,14 +51,6 @@ function resetTimer() {
     document.getElementById("timer").innerHTML = "00 : 00";
 }
 
-function incrementTimer() {
-    intervalTime = setInterval(() => {
-        if (running) {
-            
-        }
-    }, 100)
-}
-
 function gameOver() {
 
     stopTimer();
