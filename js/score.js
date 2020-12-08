@@ -19,6 +19,7 @@ class Score {
                 this.nbCoupsIdeal++;
             }
         }
+        this.nbCoupsIdeal *= 2;
         this.score = 0;
     }
 

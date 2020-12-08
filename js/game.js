@@ -53,6 +53,8 @@ function resetTimer() {
 
 function gameOver() {
 
+    updateScore();
+
     stopTimer();
 
     let modal = document.getElementById("myModal");
@@ -303,6 +305,7 @@ function getNodeStructure(id, formulas) {
 function next(e) {
 
     scoreObj.jouerCoup();
+    updateScore();
 
     e.parentNode.removeEventListener('contextmenu', handleContextMenu)
     //Récupérer l'id du parent
