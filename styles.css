@@ -211,6 +211,7 @@ a {
   
   /* Modal Content */
   .modal-content {
+    border-radius: 10px;
     position: relative;
     top:30%;
     background-color: #fefefe;
